@@ -122,8 +122,16 @@ def negSamplingLossAndGradient(
     loss = -np.log( sigmoid(np.dot(outsideVectors[outsideWordIdx,:].T,centerWordVec))) - sum([ np.log(sigmoid(- (np.dot(outsideVectors[index,:].T,centerWordVec))))  for index in negSampleWordIndices])
     dot_products = np.matmul(outsideVectors,centerWordVec)
 
-    gradCenterVec = - (1-sigmoid(dot_products[outsideWordIdx]))*outsideVectors[outsideWordIdx,:]  +  np.matmul(outsideVectors.T, 1-sigmoid(dot_products))
+    gradCenterVec = np.zeros(centerWordVec.shape)
+    gradOutsideVecs = np.zeros(outsideVectors.shape)
 
+    for index in negSampleWordIndices:
+        gradCenterVec += (1-sigmoid(-dot_products[index]))*outsideVectors[index,:]
+        gradOutsideVecs[index] += (1-sigmoid(-dot_products[index]))*centerWordVec
+
+    gradCenterVec -= (1-sigmoid(dot_products[outsideWordIdx]))*outsideVectors[outsideWordIdx,:]
+
+    gradOutsideVecs[outsideWordIdx] -= (1-sigmoid(dot_products[outsideWordIdx]))*centerWordVec
     #listed_vectors=[ (1-sigmoid(- np.dot(outsideVectors[index,:],centerWordVec))) * outsideVectors[index,:]  for index in negSampleWordIndices ]
 
     #summation = np.zeros(centerWordVec.shape)
@@ -132,7 +140,7 @@ def negSamplingLossAndGradient(
 
     #gradCenterVec =  - (1 - sigmoid(- np.dot(outsideVectors[outsideWordIdx,:],centerWordVec))) * outsideVectors[outsideWordIdx,:]  + summation
 
-    gradOutsideVecs = np.array([ -(1-sigmoid(np.dot(outsideVectors[index,:],centerWordVec)))*centerWordVec for index in range(outsideVectors.shape[0]) ])
+    #gradOutsideVecs = np.array([ -(1-sigmoid(np.dot(outsideVectors[index,:],centerWordVec)))*centerWordVec for index in range(outsideVectors.shape[0]) ])
 
     ### END YOUR CODE
 
