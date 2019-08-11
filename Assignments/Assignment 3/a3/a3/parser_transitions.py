@@ -64,14 +64,15 @@ class PartialParse(object):
         elif transition == "LA":
             self.dependencies.append((self.stack[-1],self.stack[-2]))
             del self.stack[-2]
-            print("left arc")
+            #print("left arc")
 
 
         elif transition == "RA":
             self.dependencies.append((self.stack[-2],self.stack[-1]))
             del self.stack[-1]
             #print("right arc")
-
+        else:
+            print("bc")
         #print("Stack:",self.stack)
         #print("Buffer:",self.buffer)
         #print("sentence:",self.sentence)
@@ -125,7 +126,36 @@ def minibatch_parse(sentences, model, batch_size):
     ###             to remove objects from the `unfinished_parses` list. This will free the underlying memory that
     ###             is being accessed by `partial_parses` and may cause your code to crash.
 
+    dependencies = [None]* len(sentences)
 
+    partial_parses = [ PartialParse(sentence) for sentence in sentences ]
+    unfinished_parses = partial_parses[:]
+    #print("initial unfinished parses buffer:",[i.buffer for i in unfinished_parses])
+    #print("initial unfinished parses stack:",[i.stack for i in unfinished_parses])
+    while len(unfinished_parses)>0:
+        if len(unfinished_parses) < batch_size:
+            minibatch = unfinished_parses[:]
+        else:
+            minibatch = unfinished_parses[:batch_size]
+
+        #print("minibatch buffer:",[i.buffer for i in minibatch])
+        #print("minibatch stack:",[i.stack for i in minibatch])
+        transitions = model.predict(minibatch)
+        #print(transitions)
+        for i in range(len(transitions)):
+            minibatch[i].parse([transitions[i]])
+
+        for i in range(len(partial_parses)):
+            #print(len(partial_parses[i].buffer),len(partial_parses[i].stack))
+            if len(partial_parses[i].buffer)==0 and len(partial_parses[i].stack)==1:
+                dependencies[i] = partial_parses[i].dependencies
+
+        unfinished_parses = [parse for parse in partial_parses if len(parse.buffer)!=0 or len(parse.stack)!=1 ]
+        #print("updated unfinished parses buffer:",[i.buffer for i in unfinished_parses])
+        #print("updated unfinished parses stack:",[i.stack for i in unfinished_parses])
+        #print("updated partial parses buffer:",[i.buffer for i in partial_parses])
+        #print("updated partial parses stack:",[i.stack for i in partial_parses])
+        #print("dependencies status:",dependencies)
     ### END YOUR CODE
 
     return dependencies
