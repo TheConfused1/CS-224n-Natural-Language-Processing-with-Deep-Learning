@@ -61,7 +61,7 @@ class ParserModel(nn.Module):
         ###         It has been shown empirically, that this provides better initial weights
         ###         for training networks than random uniform initialization.
         ###         For more details checkout this great blogpost:
-        ###             http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization 
+        ###             http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization
         ### Hints:
         ###     - After you create a linear layer you can access the weight
         ###       matrix via:
@@ -72,6 +72,11 @@ class ParserModel(nn.Module):
         ###     Xavier Init: https://pytorch.org/docs/stable/nn.html#torch.nn.init.xavier_uniform_
         ###     Dropout: https://pytorch.org/docs/stable/nn.html#torch.nn.Dropout
 
+        self.embed_to_hidden = nn.Linear( self.n_features * self.embed_size,self.hidden_size)
+        nn.init.xavier_uniform_(self.embed_to_hidden.weight, gain=1)
+        self.dropout = nn.Dropout(self.dropout_prob)
+        self.hidden_to_logits = nn.Linear(hidden_size, n_classes)
+        nn.init.xavier_uniform_(self.hidden_to_logits.weight)
 
         ### END YOUR CODE
 
@@ -104,6 +109,8 @@ class ParserModel(nn.Module):
         ###     Embedding Layer: https://pytorch.org/docs/stable/nn.html#torch.nn.Embedding
         ###     View: https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
 
+        embed = self.pretrained_embeddings(t)
+        x = embed.view(embed.shape[0],-1)
 
         ### END YOUR CODE
         return x
@@ -141,6 +148,11 @@ class ParserModel(nn.Module):
         ###
         ### Please see the following docs for support:
         ###     ReLU: https://pytorch.org/docs/stable/nn.html?highlight=relu#torch.nn.functional.relu
+
+        embedded = self.embedding_lookup(t)
+        h = F.relu(self.embed_to_hidden(embedded))
+        drop = self.dropout(h)
+        logits = self.hidden_to_logits(drop)
 
 
         ### END YOUR CODE
