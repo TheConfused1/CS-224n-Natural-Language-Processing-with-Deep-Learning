@@ -79,13 +79,13 @@ def generate_outputs(model, source, target, vocab):
 
     # Save Tensors to disk
     torch.save(enc_hiddens, './sanity_check_en_es_data/enc_hiddens.pkl')
-    torch.save(dec_init_state, './sanity_check_en_es_data/dec_init_state.pkl') 
+    torch.save(dec_init_state, './sanity_check_en_es_data/dec_init_state.pkl')
     torch.save(enc_masks, './sanity_check_en_es_data/enc_masks.pkl')
     torch.save(combined_outputs, './sanity_check_en_es_data/combined_outputs.pkl')
 
 
 def question_1d_sanity_check(model, src_sents, tgt_sents, vocab):
-    """ Sanity check for question 1d. 
+    """ Sanity check for question 1d.
         Compares student output to that of model with dummy data.
     """
     print("Running Sanity Check for Question 1d: Encode")
@@ -115,7 +115,7 @@ def question_1d_sanity_check(model, src_sents, tgt_sents, vocab):
 
 
 def question_1e_sanity_check(model, src_sents, tgt_sents, vocab):
-    """ Sanity check for question 1e. 
+    """ Sanity check for question 1e.
         Compares student output to that of model with dummy data.
     """
     print ("-"*80)
@@ -151,7 +151,7 @@ def question_1e_sanity_check(model, src_sents, tgt_sents, vocab):
     print ("-"*80)
 
 def question_1f_sanity_check(model, src_sents, tgt_sents, vocab):
-    """ Sanity check for question 1f. 
+    """ Sanity check for question 1f.
         Compares student output to that of model with dummy data.
     """
     print ("-"*80)
@@ -182,7 +182,7 @@ def question_1f_sanity_check(model, src_sents, tgt_sents, vocab):
     print("combined_output  Sanity Checks Passed!")
     assert(np.allclose(e_t_target.numpy(), e_t_pred.numpy())), "e_t is incorrect: it should be:\n {} but is:\n{}".format(e_t_target, e_t_pred)
     print("e_t Sanity Checks Passed!")
-    print ("-"*80)    
+    print ("-"*80)
     print("All Sanity Checks Passed for Question 1f: Step!")
     print ("-"*80)
 
@@ -194,7 +194,7 @@ def main():
 
     # Check Python & PyTorch Versions
     assert (sys.version_info >= (3, 5)), "Please update your installation of Python to version >= 3.5"
-    assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
+    #assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
 
     # Seed the Random Number Generators
     seed = 1234
@@ -211,7 +211,7 @@ def main():
         src_sents = src_sents
         tgt_sents = tgt_sents
         break
-    vocab = Vocab.load('./sanity_check_en_es_data/vocab_sanity_check.json') 
+    vocab = Vocab.load('./sanity_check_en_es_data/vocab_sanity_check.json')
 
     # Create NMT Model
     model = NMT(
@@ -233,4 +233,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
