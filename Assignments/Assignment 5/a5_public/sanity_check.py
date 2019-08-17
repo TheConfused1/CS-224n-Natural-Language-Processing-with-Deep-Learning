@@ -53,7 +53,7 @@ class DummyVocab():
         self.end_of_word = self.char2id["}"]
 
 def question_1e_sanity_check():
-    """ Sanity check for words2charindices function. 
+    """ Sanity check for words2charindices function.
     """
     print ("-"*80)
     print("Running Sanity Check for Question 1e: words2charindices()")
@@ -77,7 +77,7 @@ def question_1e_sanity_check():
     print ("-"*80)
 
 def question_1f_sanity_check():
-    """ Sanity check for pad_sents_char() function. 
+    """ Sanity check for pad_sents_char() function.
     """
     print ("-"*80)
     print("Running Sanity Check for Question 1f: Padding")
@@ -97,7 +97,7 @@ def question_1f_sanity_check():
 
 
 def question_1j_sanity_check(model):
-	""" Sanity check for model_embeddings.py 
+	""" Sanity check for model_embeddings.py
 		basic shape check
 	"""
 	print ("-"*80)
@@ -184,7 +184,7 @@ def main():
 
     # Check Python & PyTorch Versions
     assert (sys.version_info >= (3, 5)), "Please update your installation of Python to version >= 3.5"
-    assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
+    #assert(torch.__version__ == "1.0.0"), "Please update your installation of PyTorch. You have {} and you should have version 1.0.0".format(torch.__version__)
 
     # Seed the Random Number Generators
     seed = 1234
@@ -192,7 +192,7 @@ def main():
     torch.cuda.manual_seed(seed)
     np.random.seed(seed * 13 // 7)
 
-    vocab = Vocab.load('./sanity_check_en_es_data/vocab_sanity_check.json') 
+    vocab = Vocab.load('./sanity_check_en_es_data/vocab_sanity_check.json')
 
     # Create NMT Model
     model = NMT(
